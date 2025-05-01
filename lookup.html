@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Transparent Vertical Video with Fallback</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            overflow: hidden;
+            height: 100%;
+            width: 100%;
+        }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+<video id="transparentVideo" autoplay loop muted playsinline></video>
+
+<script>
+    const video = document.getElementById('transparentVideo');
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    if (isSafari) {
+        // Use HEVC with alpha for Safari
+        const source = document.createElement('source');
+        source.src = 'https://pub-c467aaee08584609a6b13eb043ada77f.r2.dev/lookup_safari.mp4';
+        source.type = 'video/mp4; codecs="hvc1"';
+        video.appendChild(source);
+    } else {
+        // Use WebM with alpha for other browsers (Chrome, Firefox, Edge)
+        const source = document.createElement('source');
+        source.src = 'https://pub-c467aaee08584609a6b13eb043ada77f.r2.dev/lookup_chrome.webm';
+        source.type = 'video/webm';
+        video.appendChild(source);
+    }
+
+    // Optional: handle error if no format is supported
+    video.onerror = () => {
+        console.warn('Video failed to load in this browser.');
+    };
+</script>
+</body>
+</html>
